@@ -3,23 +3,9 @@ services:
     image: "${APP_IMAGE:?APP_IMAGE requis}"
     container_name: busstation-backend
     restart: unless-stopped
-    environment:
-      PORT: "8080"
-      R2DBC_URL: "r2dbc:postgresql://busstation-db:5432/bus_station"
-      JDBC_URL: "jdbc:postgresql://busstation-db:5432/bus_station"
-      DB_USERNAME: "app_transaction"
-      DB_PASSWORD: "Y8xeVnTMuXr8dwN5Zs6ILoba"
-      LIQUIBASE_USERNAME: "app_transaction"
-      LIQUIBASE_PASSWORD: "Y8xeVnTMuXr8dwN5Zs6ILoba"
-      REDIS_HOST: "busstation-redis"
-      REDIS_PORT: "6379"
-      REDIS_SSL: "false"
-      KAFKA_BOOTSTRAP_SERVERS: "yowyob-shared-kafka:9092"
-      CORS_ALLOWED_ORIGINS: "https://busstation.yowyob.com"
-      PAYMENT_API_KEY: "disabled"
-      PAYMENT_SECRET_KEY: "disabled"
+    env_file: [.env]
     healthcheck:
-      test: ["CMD-SHELL","wget -qO- http://127.0.0.1:8080/actuator/health >/dev/null 2>&1 || exit 1"]
+      test: ["CMD-SHELL","wget -qO- http://127.0.0.1:8080/actuator/health >/dev/null 2>&1 || wget -qO- http://127.0.0.1:8080/ >/dev/null 2>&1; [ $? -le 8 ] && exit 0 || exit 1"]
       interval: 20s
       timeout: 10s
       retries: 20
@@ -32,32 +18,6 @@ services:
       - "traefik.http.routers.busstation.tls.certresolver=letsencrypt"
       - "traefik.http.services.busstation.loadbalancer.server.port=8080"
       - "traefik.docker.network=yowyob"
-    depends_on:
-      busstation-db: { condition: service_healthy }
-      busstation-redis: { condition: service_healthy }
-    networks: [yowyob, busstation-net]
-  busstation-db:
-    image: postgres:16-alpine
-    container_name: busstation-db
-    restart: unless-stopped
-    environment:
-      POSTGRES_DB: "bus_station"
-      POSTGRES_USER: "app_transaction"
-      POSTGRES_PASSWORD: "Y8xeVnTMuXr8dwN5Zs6ILoba"
-    volumes: [busstation-db-data:/var/lib/postgresql/data]
-    healthcheck: { test: ["CMD-SHELL","pg_isready -U app_transaction -d bus_station"], interval: 10s, timeout: 5s, retries: 15 }
-    networks: [busstation-net]
-  busstation-redis:
-    image: redis:7-alpine
-    container_name: busstation-redis
-    restart: unless-stopped
-    command: ["redis-server","--appendonly","yes"]
-    volumes: [busstation-redis-data:/data]
-    healthcheck: { test: ["CMD","redis-cli","ping"], interval: 10s, timeout: 5s, retries: 5 }
-    networks: [busstation-net]
-volumes:
-  busstation-db-data:
-  busstation-redis-data:
+    networks: [yowyob]
 networks:
   yowyob: { external: true, name: yowyob }
-  busstation-net: { name: busstation-net }
