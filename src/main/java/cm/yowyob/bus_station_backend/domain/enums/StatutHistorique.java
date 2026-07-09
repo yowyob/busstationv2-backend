@@ -1,0 +1,9 @@
+package cm.yowyob.bus_station_backend.domain.enums;
+
+public enum StatutHistorique {
+    ANNULER_PAR_AGENCE_APRES_RESERVATION,
+    ANNULER_PAR_USAGER_APRES_RESERVATION,
+    ANNULER_PAR_AGENCE_APRES_CONFIRMATION,
+    ANNULER_PAR_USAGER_APRES_CONFIRMATION,
+    VALIDER
+}

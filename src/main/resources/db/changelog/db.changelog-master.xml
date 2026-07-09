@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <include file="db/changelog/changes/001-initial-schema.sql"/>
+    <include file="db/changelog/changes/002-create-politique-et-taxes-table.sql"/>
+    <include file="db/changelog/changes/003-create-affiliation-agence-voyage-table.sql"/>
+    <include file="db/changelog/changes/004-create-planning-tables.sql"/>
+    <include file="db/changelog/changes/005-update-employes-table.sql"/>
+    <include file="db/changelog/changes/006-add-agence-extended-fields.sql"/>
+    <include file="db/changelog/changes/007-fix-moyens-paiement-type.sql"/>
+    <include file="db/changelog/changes/008-create-voyage-brouillon-table.sql"/>
+    <include file="classpath:db/changelog/changes/009-create-alertes-agence-table.sql"/>
+    <include file="classpath:db/changelog/changes/011-add-agence-to-class-voyage.sql"/>
+</databaseChangeLog>
