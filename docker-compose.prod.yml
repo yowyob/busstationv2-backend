@@ -12,7 +12,9 @@ services:
       start_period: 120s
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.busstation.rule=Host(`busstation.yowyob.com`)"
+      - "traefik.http.routers.busstation.rule=Host(`busstation.yowyob.com`) && PathPrefix(`/station-api`)"
+      - "traefik.http.middlewares.busstation-strip.stripprefix.prefixes=/station-api"
+      - "traefik.http.routers.busstation.middlewares=busstation-strip"
       - "traefik.http.routers.busstation.entrypoints=websecure"
       - "traefik.http.routers.busstation.tls=true"
       - "traefik.http.routers.busstation.tls.certresolver=letsencrypt"
